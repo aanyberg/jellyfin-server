@@ -1,0 +1,42 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    restart: unless-stopped
+
+    cap_add:
+      - NET_ADMIN
+
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+    environment:
+      - VPN_SERVICE_PROVIDER=nordvpn
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY=${NORDVPN_PRIVATE_KEY}
+      - SERVER_COUNTRIES=Sweden
+
+      - FIREWALL_OUTBOUND_SUBNETS=80.90.1.0/24
+
+    ports:
+      - "8096:8096"
+
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+
+    network_mode: "service:gluetun"
+
+    volumes:
+      - ./config:/config
+      - ./cache:/cache
+
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+
+    group_add:
+      - "991"
+
+    depends_on:
+      - gluetun

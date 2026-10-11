@@ -16,7 +16,7 @@ services:
       - WIREGUARD_PRIVATE_KEY=${NORDVPN_PRIVATE_KEY}
       - SERVER_COUNTRIES=Sweden
 
-      - FIREWALL_OUTBOUND_SUBNETS=80.90.1.0/24
+      - FIREWALL_OUTBOUND_SUBNETS=80.90.1.0/24  # Allowed outbound subnet for the VPN connection, replace with your LAN subnet if needed.
 
     ports:
       - "8096:8096"
